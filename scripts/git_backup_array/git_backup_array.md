@@ -74,9 +74,9 @@ PPDM’s Generic Application Protection supports custom workloads via user-defin
 | Option | Description                                              |
 |--------|----------------------------------------------------------|
 | `-s`   | Number of parallel streams (default: 4)                  |
-| `-i`   | Override `INCREMENTAL_MAX_AGE`                           |
+| `-i`   | `INCREMENTAL_MAX_AGE`                           |
 | `-f`   | `FULL_MAX_AGE` (not implemented)                         |
-| `-r`   | Override `FILE_URL`                                      |
+| `-r`   |  `FILE_URL`                                      |
 
 ### ▶️ Example Manual Run
 
@@ -145,4 +145,5 @@ Apache License – see script header for details
 
 - Git Documentation: git bundle, git clone  
 - Dell PPDM User Guide: Generic Application Protection
+
 
