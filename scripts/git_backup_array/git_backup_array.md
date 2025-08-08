@@ -115,6 +115,28 @@ Each file is a self-contained Git bundle for the corresponding repository and ba
 
 ---
 
+## Scripted Installation Into PPDM using provided helper Function
+
+```bash
+source ./helper/ppdm_functions
+export PPDM_FQDN=<ppdm.examle.com>
+export PPDM_TOKEN=$(get_ppdm_token 'your password')  
+PARAM_ARGS=(
+ "-s,4,STREAMS,STRING"
+  "-i,off,Incremental Max Age ms|s|m|h|d|w|M|y (default off),STRING"
+  "-f,off,Full Max Age ms|s|m|h|d|w|M|y (default off),STRING"
+  "-r,'',FILE_URL,STRING"
+)
+
+
+set_ppdm_scripts \
+  "/home/bottk/workspace/ppdm-generic-scripts/scripts/git_backup_array/git_backup_array.sh" \
+  "git_backup_array" \
+  "Script to backup an array of  GitHub urls provided by a web accessible file url" \
+  "${PARAM_ARGS[@]}"
+```  
+
+
 ## ⚠️ Limitations & Notes
 
 - 🔄 **Restore**: Manual via `git clone repo.bundle` or custom script  
