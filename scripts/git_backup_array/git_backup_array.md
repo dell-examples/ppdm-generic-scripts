@@ -115,12 +115,13 @@ Each file is a self-contained Git bundle for the corresponding repository and ba
 
 ---
 
-## Scripted Installation Into PPDM using provided helper Function
+## 🏃 Scripted Installation Into PPDM using provided helper Function
 
 ```bash
 source ./helper/ppdm_functions
 export PPDM_FQDN=<ppdm.examle.com>
 export PPDM_TOKEN=$(get_ppdm_token 'your password')  
+# param args: each line name [ e.g -n],Default Value,Alias [parameter description], type[STRING,INTEGER,BOOLEAN,DATE,CREDENTIAL]
 PARAM_ARGS=(
  "-s,4,STREAMS,STRING"
   "-i,off,Incremental Max Age ms|s|m|h|d|w|M|y (default off),STRING"
@@ -128,11 +129,11 @@ PARAM_ARGS=(
   "-r,'',FILE_URL,STRING"
 )
 
-
+# set ppdm_scripts "filepath" "script name" "description" "parameter arguments"
 set_ppdm_scripts \
-  "/home/bottk/workspace/ppdm-generic-scripts/scripts/git_backup_array/git_backup_array.sh" \
+  "./ppdm-generic-scripts/scripts/git_backup_array/git_backup_array.sh" \
   "git_backup_array" \
-  "Script to backup an array of  GitHub urls provided by a web accessible file url" \
+  "Script to backup an array of GitHub urls provided by a web accessible file url" \
   "${PARAM_ARGS[@]}"
 ```  
 
