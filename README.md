@@ -45,8 +45,8 @@ With **PPDM 19.20**, you gain the ability to write backup data *directly to* **B
 | -------------- | ---------------------------------------------------------- |
 | [/scripts](./scripts/README.md)      | Example scripts for workloads and scenarios                |
 | [/docs](./docs/README.md)         | Technical notes & implementation guides                    |
-| [/contrib/](.contrib/README.md)    | Scripts contributed by customers/partners                  |
-| [README.md](.README.md)    | This documentation                                         |
+| [/contrib/](./contrib/README.md)    | Scripts contributed by customers/partners                  |
+| [README.md](./README.md)    | This documentation                                         |
 
 ---
 
