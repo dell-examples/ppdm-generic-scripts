@@ -7,7 +7,7 @@
 
 ## Example update after contribution
 
-| Script Name        | Documentation Link                                   | Author      | Tested PPDM Version |
+| Script        | Documentation Link                                   | Author      | Tested PPDM Version |
 |------------------- |---------------------------------------------------- |------------ |--------------------|
-| example_script   | [example_script.md](aexample_script/example_script.md) | Jane Doe   | 19.20              |
+| [example_script](example_script/)  | [example_script.md](aexample_script/example_script.md) | Jane Doe   | 19.20              |
 
