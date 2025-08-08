@@ -118,7 +118,7 @@ Each file is a self-contained Git bundle for the corresponding repository and ba
 ## 🏃 Scripted Installation Into PPDM using provided helper Function
 
 ```bash
-source ./helper/ppdm_functions
+source ./helper/ppdm_functions.sh
 export PPDM_FQDN=<ppdm.examle.com>
 export PPDM_TOKEN=$(get_ppdm_token 'your password')  
 # param args: each line name [ e.g -n],Default Value,Alias [parameter description], type[STRING,INTEGER,BOOLEAN,DATE,CREDENTIAL]
