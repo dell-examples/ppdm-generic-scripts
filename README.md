@@ -43,8 +43,8 @@ With **PPDM 19.20**, you gain the ability to write backup data *directly to* **B
 
 | Folder         | Purpose                                                     |
 | -------------- | ---------------------------------------------------------- |
-| `/scripts/`    | Example scripts for workloads and scenarios                |
-| `/docs/`       | Technical notes & implementation guides                    |
+| ./scripts      | Example scripts for workloads and scenarios                |
+| ./docs         | Technical notes & implementation guides                    |
 | `/contrib/`    | Scripts contributed by customers/partners                  |
 | `README.md`    | This documentation                                         |
 
