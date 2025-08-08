@@ -1,0 +1,6 @@
+
+blank_issues_enabled: false
+contact_links:
+  - name: Questions or Other Feedback
+    url: https://github.com/dell-examples/ppdm-generic-scripts/discussions
+    about: Please use GitHub Discussions for general questions or feedback.
