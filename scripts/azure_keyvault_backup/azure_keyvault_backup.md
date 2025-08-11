@@ -131,7 +131,7 @@ PARAM_ARGS=(
 set_ppdm_scripts \
   "https://raw.githubusercontent.com/dell-examples/ppdm-generic-scripts/refs/heads/main/scripts/azure_keyvault_backup/azure_keyvault_backup.sh" \
   "azure_keyvault_backup" \
-  "Script to backup Azure DNS in give Subscription" \
+  "Script to backup Azure Keyvault in given Subscription" \
   "${PARAM_ARGS[@]}"
 ```  
 

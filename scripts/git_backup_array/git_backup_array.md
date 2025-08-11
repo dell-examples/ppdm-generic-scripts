@@ -124,10 +124,10 @@ export PPDM_FQDN=<ppdm.examle.com>
 export PPDM_TOKEN=$(get_ppdm_token 'your password')  
 # param args: each line name [ e.g -n],Default Value,Alias [parameter description], type[STRING,INTEGER,BOOLEAN,DATE,CREDENTIAL]
 PARAM_ARGS=(
- "-s,4,STREAMS,STRING"
-  "-i,off,Incremental Max Age ms|s|m|h|d|w|M|y (default off),STRING"
-  "-f,off,Full Max Age ms|s|m|h|d|w|M|y (default off),STRING"
-  "-r,'',FILE_URL,STRING"
+  '-s,4,STREAMS,STRING'
+  '-i,off,Incremental Max Age ms|s|m|h|d|w|M|y (default off),STRING'
+  '-f,off,Full Max Age ms|s|m|h|d|w|M|y (default off),STRING'
+  '-r,'',FILE_URL,STRING'
 )
 
 # set ppdm_scripts "filepath" "script name" "description" "parameter arguments"

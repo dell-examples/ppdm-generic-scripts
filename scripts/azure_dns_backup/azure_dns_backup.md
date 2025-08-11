@@ -127,7 +127,7 @@ PARAM_ARGS=(
 set_ppdm_scripts \
   "https://raw.githubusercontent.com/dell-examples/ppdm-generic-scripts/refs/heads/main/scripts/azure_dns_backup/azure_dns_backup.sh" \
   "azure_dns_backup" \
-  "Script to backup Azure DNS in give Subscription" \
+  "Script to backup Azure DNS in given Subscription" \
   "${PARAM_ARGS[@]}"
 ```  
 

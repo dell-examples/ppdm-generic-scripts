@@ -149,7 +149,7 @@ PARAM_ARGS=(
 set_ppdm_scripts \
   "https://raw.githubusercontent.com/dell-examples/ppdm-generic-scripts/refs/heads/main/scripts/s3_backup_rclone/s3_backup_rclone.sh" \
   "s3_backup_rclone" \
-  "Script to backup an array of GitHub urls provided by a web accessible file url" \
+  "Script to backup S3 and other Object Storage" \
   "${PARAM_ARGS[@]}"
 ```  
 ---
