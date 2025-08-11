@@ -152,6 +152,27 @@ DD_TARGET_DIRECTORY/
 
 ---
 
+## 🏃 Scripted Installation Into PPDM using provided helper Function
+
+Requires jq installed on the host
+
+```bash
+source ./helper/ppdm_functions.sh
+export PPDM_FQDN=<ppdm.examle.com>
+export PPDM_TOKEN=$(get_ppdm_token 'your password')  
+
+PARAM_ARGS=(
+  "-t,'',TENANT_ID,STRING"
+)
+
+# set ppdm_scripts "filepath" "script name" "description" "parameter arguments"
+set_ppdm_scripts \
+  "https://raw.githubusercontent.com/dell-examples/ppdm-generic-scripts/refs/heads/main/scripts/entraId_backup/entraId_backup.sh" \
+  "entraId_backup" \
+  "Script to backup Entra ID" \
+  "${PARAM_ARGS[@]}"
+```  
+
 ## 🛠️ Troubleshooting
 
 - Check `/var/log/entra_backup/entra_backup.log`

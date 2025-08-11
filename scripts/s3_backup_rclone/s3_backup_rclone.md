@@ -124,6 +124,36 @@ DD_TARGET_DIRECTORY/
 
 ---
 
+## 🏃 Scripted Installation Into PPDM using provided helper Function
+Requires jq installed on the host
+
+```bash
+source ./helper/ppdm_functions.sh
+export PPDM_FQDN=<ppdm.examle.com>
+export PPDM_TOKEN=$(get_ppdm_token 'your password')  
+# param args: each line name [ e.g -n],Default Value,Alias [parameter description], type[STRING,INTEGER,BOOLEAN,DATE,CREDENTIAL]
+
+PARAM_ARGS=(
+  '-b,,BUCKET,STRING'
+  '-c,,CLOUD_PROFILE,STRING'
+  '-p,,PREFIX,STRING'
+  '-s,4,STREAMS,STRING'
+  '-i,off,Incremental Max Age ms|s|m|h|d|w|M|y (default off),STRING'
+  '-f,off,Full Max Age ms|s|m|h|d|w|M|y (default off),STRING'
+  '-v,,VERSIONING enabled when -v is present,STRING'
+)
+
+
+
+# set ppdm_scripts "filepath" "script name" "description" "parameter arguments"
+set_ppdm_scripts \
+  "https://raw.githubusercontent.com/dell-examples/ppdm-generic-scripts/refs/heads/main/scripts/s3_backup_rclone/s3_backup_rclone.sh" \
+  "s3_backup_rclone" \
+  "Script to backup an array of GitHub urls provided by a web accessible file url" \
+  "${PARAM_ARGS[@]}"
+```  
+---
+
 ## ⚠️ Limitations & Notes
 
 - 🔄 **Restore**: Use rclone or S3 tools to re-upload; this script is for export only

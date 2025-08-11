@@ -111,6 +111,8 @@ Each file contains all record sets for its respective DNS zone.
 
 ## 🏃 Scripted Installation Into PPDM using provided helper Function
 
+Requires jq installed on the host
+
 ```bash
 source ./helper/ppdm_functions.sh
 export PPDM_FQDN=<ppdm.examle.com>
@@ -123,13 +125,14 @@ PARAM_ARGS=(
 
 # set ppdm_scripts "filepath" "script name" "description" "parameter arguments"
 set_ppdm_scripts \
-  "./scripts/azure_dns_backup/azure_dns_backup.sh" \
+  "https://raw.githubusercontent.com/dell-examples/ppdm-generic-scripts/refs/heads/main/scripts/azure_dns_backup/azure_dns_backup.sh" \
   "azure_dns_backup" \
-  "Script to backup an array of GitHub urls provided by a web accessible file url" \
+  "Script to backup Azure DNS in give Subscription" \
   "${PARAM_ARGS[@]}"
 ```  
 
 ---
+
 ## ⚠️ Limitations & Notes
 
 - Only `FULL` backups supported

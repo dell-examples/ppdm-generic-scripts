@@ -111,6 +111,29 @@ DD_TARGET_DIRECTORY/
     ├── <cert1>_cert.pfx
     └── <key1>_key.json
 ```
+---
+
+## 🏃 Scripted Installation Into PPDM using provided helper Function
+
+Requires jq installed on the host
+
+```bash
+source ./helper/ppdm_functions.sh
+export PPDM_FQDN=<ppdm.examle.com>
+export PPDM_TOKEN=$(get_ppdm_token 'your password')  
+# param args: each line name [ e.g -n],Default Value,Alias [parameter description], type[STRING,INTEGER,BOOLEAN,DATE,CREDENTIAL]
+PARAM_ARGS=(
+  "-t,'',TENANT_ID,STRING"
+  "-s,'',SUBSCRIPTION_ID,STRING"
+)
+
+# set ppdm_scripts "filepath" "script name" "description" "parameter arguments"
+set_ppdm_scripts \
+  "https://raw.githubusercontent.com/dell-examples/ppdm-generic-scripts/refs/heads/main/scripts/azure_keyvault_backup/azure_keyvault_backup.sh" \
+  "azure_keyvault_backup" \
+  "Script to backup Azure DNS in give Subscription" \
+  "${PARAM_ARGS[@]}"
+```  
 
 ---
 

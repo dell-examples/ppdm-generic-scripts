@@ -103,83 +103,92 @@ function get_ppdm_token {
 
 
 function set_ppdm_scripts {
-    local SCRIPT_FILE="$1"        # Path to bash script file
-    local SCRIPT_NAME="$2"        # Script name (PPDM script object name)
-    local DESCRIPTION="$3"        # Script description    
+    local SCRIPT_SOURCE="$1"
+    local SCRIPT_NAME="$2"
+    local DESCRIPTION="$3"
+    local VERBOSE="${VERBOSE:-false}"
 
+    shift 3
 
-    shift 3                      # Remaining args are param specs
-    # ===== Read and escape script content for JSON =====
-    if [[ ! -f "$SCRIPT_FILE" ]]; then
-        echo "Script file not found: $SCRIPT_FILE" >&2
+    # ===== Read script content =====
+    local SCRIPT_CONTENT
+    if [[ "$SCRIPT_SOURCE" =~ ^https:// ]]; then
+        [[ "$VERBOSE" == "true" ]] && echo "Downloading script from URL: $SCRIPT_SOURCE"
+        SCRIPT_CONTENT=$(curl -s "$SCRIPT_SOURCE")
+        if [[ -z "$SCRIPT_CONTENT" ]]; then
+            echo "❌ Failed to download script from URL: $SCRIPT_SOURCE"
+            return 1
+        fi
+    elif [[ -f "$SCRIPT_SOURCE" ]]; then
+        [[ "$VERBOSE" == "true" ]] && echo "Reading script from local file: $SCRIPT_SOURCE"
+        SCRIPT_CONTENT=$(<"$SCRIPT_SOURCE")
+        if [[ -z "$SCRIPT_CONTENT" ]]; then
+            echo "❌ Script file is empty or unreadable: $SCRIPT_SOURCE"
+            return 1
+        fi
+    else
+        echo "❌ Invalid script source: $SCRIPT_SOURCE"
         return 1
     fi
 
-    local SCRIPT_CONTENT
-    SCRIPT_CONTENT=$(<"$SCRIPT_FILE" sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' | awk '{printf "%s\\n", $0}')
-    # Escape newlines and quotes in the script content
-
-    # ===== Build the parameters array from remaining arguments =====
-    local PARAMETERS_JSON=""
-
+    # ===== Build parameters array =====
+    local PARAM_ARRAY=()
     for param in "$@"; do
-        # Each param must be in the format: alias,value,displayName,type
         IFS=',' read -r ALIAS VALUE DISPLAYNAME TYPE <<< "$param"
-        # Escape double quotes in value/displayName (optional)
-        VALUE_ESCAPED=$(echo "$VALUE" | sed 's/"/\\"/g')
-        DISPLAYNAME_ESCAPED=$(echo "$DISPLAYNAME" | sed 's/"/\\"/g')
-
-        PARAMETERS_JSON+=$(cat <<EOPARAM
-{
-  "alias": "$ALIAS",
-  "value": "$VALUE_ESCAPED",
-  "displayName": "$DISPLAYNAME_ESCAPED",
-  "type": "$TYPE"
-},
-EOPARAM
-)
+        PARAM_JSON=$(jq -n \
+            --arg alias "$ALIAS" \
+            --arg value "$VALUE" \
+            --arg displayName "$DISPLAYNAME" \
+            --arg type "$TYPE" \
+            '{alias: $alias, value: $value, displayName: $displayName, type: $type}')
+        PARAM_ARRAY+=("$PARAM_JSON")
     done
-    # Remove trailing comma
-    PARAMETERS_JSON=$(echo "$PARAMETERS_JSON" | sed '$s/,$//')
 
-    # ===== Build the full JSON payload =====
+    local PARAMETERS_JSON
+    PARAMETERS_JSON=$(printf '%s\n' "${PARAM_ARRAY[@]}" | jq -s '.')
+
+    # ===== Build JSON payload =====
     local JSON_PAYLOAD
-    JSON_PAYLOAD=$(cat <<EOF
-{
-  "extendedData": {
-    "subTypes": [
-      "GENERIC_PAAS_DATABASE"
-    ],
-    "type": "ASSET"
-  },
-  "content": "$SCRIPT_CONTENT",
-  "name": "$SCRIPT_NAME",
-  "systemPredefined": false,
-  "parameters": [
-    $PARAMETERS_JSON
-  ],
-  "osType": "LINUX",
-  "purpose": "BACKUP",
-  "type": "BACKUP",
-  "description": "$DESCRIPTION"
-}
-EOF
-)
+    JSON_PAYLOAD=$(jq -n \
+        --arg content "$SCRIPT_CONTENT" \
+        --arg name "$SCRIPT_NAME" \
+        --arg description "$DESCRIPTION" \
+        --argjson parameters "$PARAMETERS_JSON" \
+        '{
+            extendedData: {
+                subTypes: ["GENERIC_PAAS_DATABASE"],
+                type: "ASSET"
+            },
+            content: $content,
+            name: $name,
+            systemPredefined: false,
+            parameters: $parameters,
+            osType: "LINUX",
+            purpose: "BACKUP",
+            type: "BACKUP",
+            description: $description
+        }')
 
-    # ===== Debug output =====
-    echo "==== Debug: JSON Payload ===="
-    echo "$JSON_PAYLOAD"
-    echo "==== End JSON Debug ===="
-    echo $PPDM_FQDN
-    echo $PPDM_TOKEN
-    # ===== Upload via verbose curl =====
-    local RESPONSE
-    RESPONSE=$(curl -skvvv -X POST "https://${PPDM_FQDN}:8443/api/v3/scripts" \
+    [[ "$VERBOSE" == "true" ]] && echo "Uploading script '$SCRIPT_NAME' to PPDM..."
+
+    # ===== Upload via curl using temp file =====
+    local RESPONSE_FILE
+    RESPONSE_FILE=$(mktemp)
+    local HTTP_STATUS
+
+    HTTP_STATUS=$(curl -sk -w "%{http_code}" -o "$RESPONSE_FILE" -X POST "https://${PPDM_FQDN}:8443/api/v3/scripts" \
         -H "Authorization: Bearer $PPDM_TOKEN" \
         -H "Content-Type: application/json" \
-        -d "$JSON_PAYLOAD" 2>&1)
+        -d "$JSON_PAYLOAD")
 
-    echo "==== cURL response ===="
-    echo "$RESPONSE"
+    if [[ "$HTTP_STATUS" == "200" || "$HTTP_STATUS" == "201" ]]; then
+        echo "✅ Upload succeeded."
+    else
+        echo "❌ Upload failed. HTTP status: $HTTP_STATUS"
+        echo "Response:"
+        cat "$RESPONSE_FILE" | jq .
+    fi
 
+    rm -f "$RESPONSE_FILE"
 }
+

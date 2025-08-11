@@ -116,6 +116,7 @@ Each file is a self-contained Git bundle for the corresponding repository and ba
 ---
 
 ## 🏃 Scripted Installation Into PPDM using provided helper Function
+Requires jq installed on the host
 
 ```bash
 source ./helper/ppdm_functions.sh
@@ -131,7 +132,7 @@ PARAM_ARGS=(
 
 # set ppdm_scripts "filepath" "script name" "description" "parameter arguments"
 set_ppdm_scripts \
-  "./ppdm-generic-scripts/scripts/git_backup_array/git_backup_array.sh" \
+  "https://raw.githubusercontent.com/dell-examples/ppdm-generic-scripts/refs/heads/main/scripts/git_backup_array/git_backup_array.sh" \
   "git_backup_array" \
   "Script to backup an array of GitHub urls provided by a web accessible file url" \
   "${PARAM_ARGS[@]}"
