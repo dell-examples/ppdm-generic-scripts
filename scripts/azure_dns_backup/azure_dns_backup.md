@@ -109,6 +109,27 @@ Each file contains all record sets for its respective DNS zone.
 
 ---
 
+## 🏃 Scripted Installation Into PPDM using provided helper Function
+
+```bash
+source ./helper/ppdm_functions.sh
+export PPDM_FQDN=<ppdm.examle.com>
+export PPDM_TOKEN=$(get_ppdm_token 'your password')  
+# param args: each line name [ e.g -n],Default Value,Alias [parameter description], type[STRING,INTEGER,BOOLEAN,DATE,CREDENTIAL]
+PARAM_ARGS=(
+  "-t,'',TENANT_ID,STRING"
+  "-s,'',SUBSCRIPTION_ID,STRING"
+)
+
+# set ppdm_scripts "filepath" "script name" "description" "parameter arguments"
+set_ppdm_scripts \
+  "./scripts/azure_dns_backup/azure_dns_backup.sh" \
+  "azure_dns_backup" \
+  "Script to backup an array of GitHub urls provided by a web accessible file url" \
+  "${PARAM_ARGS[@]}"
+```  
+
+---
 ## ⚠️ Limitations & Notes
 
 - Only `FULL` backups supported
