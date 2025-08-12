@@ -29,24 +29,7 @@ log() {
   echo "$(date '+%Y-%m-%d %H:%M:%S') - $*" >> "$LOG_FILE"
 }
 
-timestamp_diff() {
-  local input_timestamp=$1
-  local current_timestamp
-  current_timestamp=$(date +%s)
-  local diff=$((current_timestamp - input_timestamp))
-  echo "$diff"
-}
-
-delete_recursively() {
-  local target="$1"
-  log "[cleaning] temp dir $target"
-  if [ ! -e "$target" ]; then
-    log "Target '$target' does not exist."
-  fi
-  find "$target" -type f -exec unlink {} \;
-  find "$target" -depth -type d -exec rmdir {} \;
-}
-
+# Function to export data from Azure Key Vault
 export_data() {
     # Discover all Key Vaults in the current subscription
     log "🔍 Discovering Key Vaults..."
