@@ -185,7 +185,7 @@ set_ppdm_scripts \
 
 ## 📄 License
 
-Apache License – see script header for terms.
+MIT License – see script header for terms.
 
 ---
 

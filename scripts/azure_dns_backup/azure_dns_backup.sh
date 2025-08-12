@@ -5,7 +5,8 @@
 # Version: 1.03
 # Change log: 2025-07-20 - Initial version
 
-# Licensed under the MIT License.
+# Licensed under the MIT License
+# https://mit-license.org/
 # ─── Default Values ────────────────────────────────────────────────────────────
 if [ -f ~/.bashrc ]; then
     source ~/.bashrc

@@ -5,7 +5,8 @@
 # Version: 1.03
 # Change log: 2025-07-20 - Initial version
 
-# Licensed under the MIT License.
+# Licensed under the MIT License
+# https://mit-license.org/
 # Required Azure RBAC Roles for Exporting Vault Data
 # Object Type	Required Role	Permissions
 # Secrets	Key Vault Secrets Officer	Full access to secrets (read/write/delete), except managing permissions

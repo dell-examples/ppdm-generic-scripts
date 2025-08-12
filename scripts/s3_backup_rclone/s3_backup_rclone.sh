@@ -7,6 +7,8 @@
 # change log: 2025-07-20 - Initial version
 #              2025-07-26 - Added incremental backup support
 #              2025-07-28- Added support for rclone S3 versioning
+# Licensed under the MIT License
+# https://mit-license.org/
 ###############################################################################
 
 # Set the base directory for backups, provided by the agent via environment variable

@@ -1,5 +1,12 @@
 #!/bin/bash
+# Git Backup Script
+# Author: Karsten Bott
+# Date Modified: 2025-07-28
+# Version: 1.03
+# Change log: 2025-07-20 - Initial version
 
+# Licensed under the MIT License
+# https://mit-license.org/
 # Check if Git is installed
 if ! command -v git >/dev/null 2>&1; then
   echo "Error: Git is not installed. Please install Git before running this script."

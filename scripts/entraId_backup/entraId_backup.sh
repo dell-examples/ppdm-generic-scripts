@@ -9,7 +9,8 @@
 #              2025-08-01 - Added B2C and B2B export
 #              2025-08-02 - Added logging and cleanup functions
 #              2025-08-03 - Added error handling and improved logging
-# Licensed under the MIT License.
+# Licensed under the MIT License
+# https://mit-license.org/
 # ─── Default Values ────────────────────────────────────────────────────────────
 LOG_DIR="/var/log/entra_backup"
 LOG_BASENAME="entra_backup.log"
