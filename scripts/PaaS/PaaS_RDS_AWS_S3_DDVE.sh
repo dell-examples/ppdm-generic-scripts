@@ -28,14 +28,12 @@ e) ENDPOINT_URL="$OPTARG" ;;
 r) RETAIN_OBJECT="$OPTARG" ;; # yes or no
 \?) echo "Invalid option: -$OPTARG" >&2; exit 1 ;;
 esac
-done
  done
  
  
 # backup directory settings (Defaults_
  BASE_BACKUP_DIR=${DD_TARGET_DIRECTORY}
- ENDPOINT_URL=${ENDPOINT_URL:-"https://bucket.vpce-08d4c175d1318826b-3r1szqif.s3.us
-west-2.vpce.amazonaws.com"}
+ ENDPOINT_URL=${ENDPOINT_URL:-"https://bucket.vpce-08d4c175d1318826b-3r1szqif.s3.uswest-2.vpce.amazonaws.com"}
  RETAIN_OBJECT=${RETAIN_OBJECT:-"no"}
  OBJECT_NAME="${SQLDB}_$(date +%s).bak"
  
@@ -84,8 +82,7 @@ EXPECTED_SIZE_GB=$(echo "($OBJECT_SIZE_BYTES + 1073741823)/1073741824" | bc)
 # Copy from S3 using expected size boostfs mountpoint
  #
  
-if aws s3 cp "s3://$BUCKET/$OBJECT_NAME"  "$BASE_BACKUP_DIR"  --endpoint
-url "$ENDPOINT_URL" --expected-size ${EXPECTED_SIZE_GB}GB  --no-progress;
+if aws s3 cp "s3://$BUCKET/$OBJECT_NAME"  "$BASE_BACKUP_DIR"  --endpointurl "$ENDPOINT_URL" --expected-size ${EXPECTED_SIZE_GB}GB  --no-progress;
  then
  
 echo " S3 copy succeeded Proceeding to delete the object.."
