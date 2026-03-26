@@ -56,4 +56,3 @@ elif [ "$BACKUP_LEVEL" == "LOG" ]; then
 else
   echo "Invalid backup level. Use 'FULL' or 'LOG'."
 fi
-PaaS_RDS_AWS_S3_DDV
