@@ -30,8 +30,7 @@ full_backup() {
 # Function to perform an incremental backup using LSN
  incremental_backup() {
     echo "Starting incremental backup..."
-    output=$(mysqlbackup --defaults-file=/etc/my.cnf --incremental --start
-lsn=$LAST_BACKUP_TIME \
+    output=$(mysqlbackup --defaults-file=/etc/my.cnf --incremental --startlsn=$LAST_BACKUP_TIME \
                          --incremental-backup-dir=$DD_TARGET_DIRECTORY \
                          --user=$ASSET_USERNAME --password=$ASSET_PASSWORD  backup 2>&1)
     if [ $? -eq 0 ]; then

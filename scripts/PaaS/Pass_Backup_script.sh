@@ -33,8 +33,7 @@ while getopts ":s:d:u:p:b:e:r:" opt; do
  OBJECT_NAME="${SQLDB}_$(date +%s)_*.bak"
  
 # Contact the database and execute the stored procedure
- BACKUP_OUTPUT=$($SQLCMD ${SQLOPT} -s ',' -U "${ASSET_USERNAME}" -P "$
- {ASSET_PASSWORD}" -S "$SQLSRV" -Q "exec msdb.dbo.rds_backup_database
+ BACKUP_OUTPUT=$($SQLCMD ${SQLOPT} -s ',' -U "${ASSET_USERNAME}" -P "${ASSET_PASSWORD}" -S "$SQLSRV" -Q "exec msdb.dbo.rds_backup_database
     @source_db_name='${SQLDB}',
     @s3_arn_to_backup_to='arn:aws:s3:::${BUCKET}/${OBJECT_NAME}',
     @overwrite_s3_backup_file=1,
@@ -52,9 +51,7 @@ TASKID=$(echo "$BACKUP_OUTPUT" | head -1 | cut -d ',' -f 1)
  # Poll for completion
  sleep 30
  while true; do
-  TASK_STATUS=$($SQLCMD ${SQLOPT} -s ',' -U "${ASSET_USERNAME}" -P 
-"${ASSET_PASSWORD}" -S "$SQLSRV" -Q "
-    exec msdb.dbo.rds_task_status
+  TASK_STATUS=$($SQLCMD ${SQLOPT} -s ',' -U "${ASSET_USERNAME}" -P "${ASSET_PASSWORD}" -S "$SQLSRV" -Q "exec msdb.dbo.rds_task_status
     @db_name='${SQLDB}',
     @task_id=${TASKID};" | head -1)
  
