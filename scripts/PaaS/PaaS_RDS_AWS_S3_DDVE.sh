@@ -1,28 +1,34 @@
  #!/bin/sh -x
- #
- # This script will use the AWS stored procedure to dump the database to an S3 bucket
- # It will then use AWS CLI copy the contents to DD
- # Tool information
+#
+# Copyright (c) 2025 Dell Inc., or its subsidiaries. All Rights Reserved.
+#
+# Licensed under the MIT License. See LICENSE file in the project root for
+# full license information.
+#
+# This script will use the AWS stored procedure to dump the database to an S3 bucket
+# It will then use AWS CLI copy the contents to DD
+# Tool information
  
  
 # Tool paths
  
 SQL_TOOLS_PATH="/opt/mssql-tools18/bin"
- SQLCMD=$SQL_TOOLS_PATH/sqlcmd
- SQLOPT="-N o -h 1 -W -k1 -h -1 -C"
+SQLCMD=$SQL_TOOLS_PATH/sqlcmd
+SQLOPT="-N o -h 1 -W -k1 -h -1 -C"
  
  
 # Process command line options
  
 while getopts ":s:d:b:e:r:" opt; do
- case $opt in
- s) SQLSRV="$OPTARG" ;;
- d) SQLDB="$OPTARG" ;;
- b) BUCKET="$OPTARG" ;;
- e) ENDPOINT_URL="$OPTARG" ;;
- r) RETAIN_OBJECT="$OPTARG" ;; # yes or no
- \?) echo "Invalid option: -$OPTARG" >&2; exit 1 ;;
- esac
+case $opt in
+s) SQLSRV="$OPTARG" ;;
+d) SQLDB="$OPTARG" ;;
+b) BUCKET="$OPTARG" ;;
+e) ENDPOINT_URL="$OPTARG" ;;
+r) RETAIN_OBJECT="$OPTARG" ;; # yes or no
+\?) echo "Invalid option: -$OPTARG" >&2; exit 1 ;;
+esac
+done
  done
  
  

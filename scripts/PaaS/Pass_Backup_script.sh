@@ -1,13 +1,19 @@
  #!/bin/bash
- # RDS SQL Server Backup Script with Parallel S3 Copy to DDVE and Improved Logging
- 
+#
+# Copyright (c) 2025 Dell Inc., or its subsidiaries. All Rights Reserved.
+#
+# Licensed under the MIT License. See LICENSE file in the project root for
+# full license information.
+#
+# RDS SQL Server Backup Script with Parallel S3 Copy to DDVE and Improved Logging
+
 # Tool paths
- SQL_TOOLS_PATH="/opt/mssql-tools18/bin"
- SQLCMD=$SQL_TOOLS_PATH/sqlcmd
- SQLOPT="-N o -h 1 -W -k1 -h -1 -C"
- 
+SQL_TOOLS_PATH="/opt/mssql-tools18/bin"
+SQLCMD=$SQL_TOOLS_PATH/sqlcmd
+SQLOPT="-N o -h 1 -W -k1 -h -1 -C"
+
 # Process command line options
- while getopts ":s:d:u:p:b:e:r:" opt; do
+while getopts ":s:d:u:p:b:e:r:" opt; do
   case $opt in
     s) SQLSRV="$OPTARG" ;;
     d) SQLDB="$OPTARG" ;;
