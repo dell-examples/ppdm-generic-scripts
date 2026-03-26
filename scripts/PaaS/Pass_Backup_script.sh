@@ -61,7 +61,7 @@ TASKID=$(echo "$BACKUP_OUTPUT" | head -1 | cut -d ',' -f 1)
  
   echo "Progress: $PROG, Lifecycle: $LIFECYCLE"
  
-  if [[ "$LIFECYCLE" == "SUCCESS"] && ["$PROG" -eq 100 ]]; then
+  if [[ "$LIFECYCLE" == "SUCCESS" && "$PROG" -eq 100 ]]; then
     echo "RDS Backup completed successfully"
     break
   fi
