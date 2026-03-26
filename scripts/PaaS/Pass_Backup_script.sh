@@ -28,15 +28,13 @@ while getopts ":s:d:u:p:b:e:r:" opt; do
  
 # Backup directory settings
  BASE_BACKUP_DIR=${DD_TARGET_DIRECTORY}
- ENDPOINT_URL=${ENDPOINT_URL:-"https://bucket.vpce-08d4c175d1318826b-3r1szqif.s3.us
-west-2.vpce.amazonaws.com"}
+ ENDPOINT_URL=${ENDPOINT_URL:-"https://bucket.vpce-08d4c175d1318826b-3r1szqif.s3.uswest-2.vpce.amazonaws.com"}
  RETAIN_OBJECT=${RETAIN_OBJECT:-"no"}
  OBJECT_NAME="${SQLDB}_$(date +%s)_*.bak"
  
 # Contact the database and execute the stored procedure
  BACKUP_OUTPUT=$($SQLCMD ${SQLOPT} -s ',' -U "${ASSET_USERNAME}" -P "$
- {ASSET_PASSWORD}" -S "$SQLSRV" -Q "
- exec msdb.dbo.rds_backup_database
+ {ASSET_PASSWORD}" -S "$SQLSRV" -Q "exec msdb.dbo.rds_backup_database
     @source_db_name='${SQLDB}',
     @s3_arn_to_backup_to='arn:aws:s3:::${BUCKET}/${OBJECT_NAME}',
     @overwrite_s3_backup_file=1,
@@ -76,8 +74,7 @@ TASKID=$(echo "$BACKUP_OUTPUT" | head -1 | cut -d ',' -f 1)
 # Retry logic to detect all backup parts
  RETRIES=5
  for i in $(seq 1 $RETRIES); do
-  OBJECT_NAMES=$(aws s3 ls "s3://$BUCKET/" --endpoint-url "$ENDPOINT_URL" 
-| grep "${SQLDB}_" | awk '{print $4}')
+  OBJECT_NAMES=$(aws s3 ls "s3://$BUCKET/" --endpoint-url "$ENDPOINT_URL" | grep "${SQLDB}_" | awk '{print $4}')
   if [ -n "$OBJECT_NAMES" ]; then
     break
   fi
@@ -109,8 +106,7 @@ echo "$OBJECT_NAMES" | xargs -I {} -P 10 sh -c 'echo "$(date) - Copying {}"; aws
  
   if [ "$RETAIN_OBJECT" != "yes" ]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - Deleting backup files from S3..."
-    echo "$OBJECT_NAMES" | xargs -I {} -P 10 sh -c 'echo "$(date) - Deleting {}"; aws 
-s3 rm "s3://'"$BUCKET"'/{}" --endpoint-url "'"$ENDPOINT_URL"'" --region "'"$REGION"'"'
+    echo "$OBJECT_NAMES" | xargs -I {} -P 10 sh -c 'echo "$(date) - Deleting {}"; aws s3 rm "s3://'"$BUCKET"'/{}" --endpoint-url "'"$ENDPOINT_URL"'" --region "'"$REGION"'"'
     echo "$(date '+%Y-%m-%d %H:%M:%S') - S3 objects deleted successfully."
   else
     echo "$(date '+%Y-%m-%d %H:%M:%S') - Retaining objects on S3 as per user request."
