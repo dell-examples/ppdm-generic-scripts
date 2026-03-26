@@ -65,7 +65,7 @@ TASK_STATUS=$($SQLCMD ${SQLOPT} -s ',' -U "${ASSET_USERNAME}" -P "${ASSET_PASSWO
  
   echo "Progress: $PROG, Lifecycle: $LIFECYCLE"
  
-  if [[ "$LIFECYCLE" == "SUCCESS" && "$PROG" -eq 100 ]]; then
+  if [ "$LIFECYCLE" == "SUCCESS" && "$PROG" -eq 100 ]; then
     echo "RDS Backup completed successfully"
     break
   fi
@@ -82,7 +82,7 @@ EXPECTED_SIZE_GB=$(echo "($OBJECT_SIZE_BYTES + 1073741823)/1073741824" | bc)
 # Copy from S3 using expected size boostfs mountpoint
  #
  
-if aws s3 cp "s3://$BUCKET/$OBJECT_NAME"  "$BASE_BACKUP_DIR"  --endpointurl "$ENDPOINT_URL" --expected-size ${EXPECTED_SIZE_GB}GB  --no-progress;
+if aws s3 cp "s3://$BUCKET/$OBJECT_NAME"  "$BASE_BACKUP_DIR"  --endpoint-url "$ENDPOINT_URL" --expected-size ${EXPECTED_SIZE_GB}GB  --no-progress;
  then
  
 echo " S3 copy succeeded Proceeding to delete the object.."

@@ -28,7 +28,7 @@ if [ ! -z "$PORT_NAME" ]; then
  fi
   
 full_backup() {
-  output=$(mongodump -h localhost $PORT_NAME -o /"$DD_TARGET_DIRECTORY" 2>&1)
+  output=$(mongodump -h localhost $PORT_NAME -o "$DD_TARGET_DIRECTORY" 2>&1)
   if [ $? -eq 0 ]; then
     echo "Full backup completed successfully at $(date)!"
     echo "$output"

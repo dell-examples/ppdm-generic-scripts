@@ -10,7 +10,7 @@ DATA_DIR="/var/lib/mysql" # change if necessary
 BACKUP_DIR=$DD_TARGET_DIRECTORY
 TODAY=$(date +%s)
 BACKUP_LEVEL=$BACKUP_LEVEL
-LASTBACKUPTIME=$LAST_BACKUP_TIME
+LAST_BACKUP_TIME=$LAST_BACKUP_TIME
   
 # Function to perform full backup
 full_backup() {

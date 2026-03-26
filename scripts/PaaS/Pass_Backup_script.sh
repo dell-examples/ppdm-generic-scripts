@@ -30,6 +30,7 @@ while getopts ":s:d:u:p:b:e:r:" opt; do
  BASE_BACKUP_DIR=${DD_TARGET_DIRECTORY}
  ENDPOINT_URL=${ENDPOINT_URL:-"https://bucket.vpce-08d4c175d1318826b-3r1szqif.s3.uswest-2.vpce.amazonaws.com"}
  RETAIN_OBJECT=${RETAIN_OBJECT:-"no"}
+ REGION=${REGION:-"us-west-2"}
  OBJECT_NAME="${SQLDB}_$(date +%s)_*.bak"
  
 # Contact the database and execute the stored procedure
@@ -88,8 +89,7 @@ echo "$(date '+%Y-%m-%d %H:%M:%S') - Backup parts detected:"
  echo "$OBJECT_NAMES"
  
 # Start parallel copy for all parts
- echo "$(date '+%Y-%m-%d %H:%M:%S') - Starting parallel copy of 
-all backup parts from S3 to DDVE..."
+ echo "$(date '+%Y-%m-%d %H:%M:%S') - Starting parallel copy of all backup parts from S3 to DDVE..."
  
 echo "$OBJECT_NAMES" | xargs -I {} -P 10 sh -c 'echo "$(date) - Copying {}"; aws s3 cp "s3://'"$BUCKET"'/{}" "'"$BASE_BACKUP_DIR"'/" --endpoint-url "'"$ENDPOINT_URL"'"  --no-progress || echo "Failed to copy {}"'
  
