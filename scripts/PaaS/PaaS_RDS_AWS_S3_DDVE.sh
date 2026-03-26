@@ -65,7 +65,7 @@ TASK_STATUS=$($SQLCMD ${SQLOPT} -s ',' -U "${ASSET_USERNAME}" -P "${ASSET_PASSWO
  
   echo "Progress: $PROG, Lifecycle: $LIFECYCLE"
  
-  if [ "$LIFECYCLE" == "SUCCESS" && "$PROG" -eq 100 ]; then
+  if [ ["$LIFECYCLE" == "SUCCESS" ]&& ["$PROG" -eq 100] ]; then
     echo "RDS Backup completed successfully"
     break
   fi
@@ -89,7 +89,7 @@ echo " S3 copy succeeded Proceeding to delete the object.."
  
 #Delete the object from S3 after successful copy
  
-if [[ "$RETAIN_OBJECT" != "yes" ]]; then
+if [ "$RETAIN_OBJECT" != "yes" ]; then
  echo "Deleting object from S3..."
  aws s3 rm "s3://$BUCKET/$OBJECT_NAME" --endpoint-url "$ENDPOINT_URL"
  echo "S3 object deleted successfully"

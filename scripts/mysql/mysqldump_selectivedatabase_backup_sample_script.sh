@@ -36,6 +36,6 @@ if [[ ! -z "${ASSET_PASSWORD}" ]]; then
  fi
   
 echo "starting mysqldump for database ${DB_NAME}"
- mysqldump -u "${ASSET_USERNAME}" -p${ASSET_PASSWORD} --databases ${DB_NAME} > ${BASE_BACKUP_DIR}/${DB_NAME}-$(date +%Y%m%d-%H%M%S).sql
+ mysqldump -u "${ASSET_USERNAME}" -p${ASSET_PASSWORD} --databases "${DB_NAME}" > ${BASE_BACKUP_DIR}/${DB_NAME}-$(date +%Y%m%d-%H%M%S).sql
  [ ! $? == 0 ] && echo "mysqldump of database ${DB_NAME} failed" && exit 1
  echo "mysqldump of database ${DB_NAME} success"
