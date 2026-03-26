@@ -5,8 +5,7 @@
 # Licensed under the MIT License. See LICENSE file in the project root for
 # full license information.
 #
-# DD_TARGET_DIRECTORY, DB_USER, DB_PASS is an exported value of the Destination path by 
-the agent
+# DD_TARGET_DIRECTORY, DB_USER, DB_PASS is an exported value of the Destination path by the agent
 # BACKUP_LEVEL is an exported value having "full | log" values by the agent
 # update the username details if necessary for -u
 # Compression should not be added to the MySQL.
