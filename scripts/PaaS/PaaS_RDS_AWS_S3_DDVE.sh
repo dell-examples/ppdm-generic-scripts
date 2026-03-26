@@ -65,7 +65,7 @@ TASK_STATUS=$($SQLCMD ${SQLOPT} -s ',' -U "${ASSET_USERNAME}" -P "${ASSET_PASSWO
  
   echo "Progress: $PROG, Lifecycle: $LIFECYCLE"
  
-  if [["$LIFECYCLE" == "SUCCESS" && "$PROG" -eq 100]]; then
+  if ["$LIFECYCLE" == "SUCCESS"] && "[$PROG" -eq 100]; then
     echo "RDS Backup completed successfully"
     break
   fi
