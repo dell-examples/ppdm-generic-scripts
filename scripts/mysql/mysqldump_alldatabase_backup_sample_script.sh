@@ -1,13 +1,19 @@
-!/bin/bash 
+#!/bin/bash 
+#
+# Copyright (c) 2025 Dell Inc., or its subsidiaries. All Rights Reserved.
+#
+# Licensed under the MIT License. See LICENSE file in the project root for
+# full license information.
+#
 # update the username details if necessary for -u
- BASE_BACKUP_DIR=${DD_TARGET_DIRECTORY}
- echo "entering ... dump.sh ..."
+BASE_BACKUP_DIR=${DD_TARGET_DIRECTORY}
+echo "entering ... dump.sh ..."
   
 # Check if BACKUP_LEVEL is "full"
- if [[ "$BACKUP_LEVEL" != "FULL" ]]; then
+if [[ "$BACKUP_LEVEL" != "FULL" ]]; then
   echo "Backup level is not 'FULL'. Exiting..."
   exit 1
- fi
+fi
   
 if [[ ! -z "${ASSET_PASSWORD}" ]]; then
     PASSWORD_CHECK="MYSQL_PWD='${ASSET_PASSWORD}'"

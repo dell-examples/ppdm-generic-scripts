@@ -1,35 +1,39 @@
  #!/bin/sh -x
- #
- # This script will use the AWS stored procedure to dump the database to an S3 bucket
- # It will then use AWS CLI copy the contents to DD
- # Tool information
+#
+# Copyright (c) 2025 Dell Inc., or its subsidiaries. All Rights Reserved.
+#
+# Licensed under the MIT License. See LICENSE file in the project root for
+# full license information.
+#
+# This script will use the AWS stored procedure to dump the database to an S3 bucket
+# It will then use AWS CLI copy the contents to DD
+# Tool information
  
  
 # Tool paths
  
 SQL_TOOLS_PATH="/opt/mssql-tools18/bin"
- SQLCMD=$SQL_TOOLS_PATH/sqlcmd
- SQLOPT="-N o -h 1 -W -k1 -h -1 -C"
+SQLCMD=$SQL_TOOLS_PATH/sqlcmd
+SQLOPT="-N o -h 1 -W -k1 -h -1 -C"
  
  
 # Process command line options
  
 while getopts ":s:d:b:e:r:" opt; do
- case $opt in
- s) SQLSRV="$OPTARG" ;;
- d) SQLDB="$OPTARG" ;;
- b) BUCKET="$OPTARG" ;;
- e) ENDPOINT_URL="$OPTARG" ;;
- r) RETAIN_OBJECT="$OPTARG" ;; # yes or no
- \?) echo "Invalid option: -$OPTARG" >&2; exit 1 ;;
- esac
+case $opt in
+s) SQLSRV="$OPTARG" ;;
+d) SQLDB="$OPTARG" ;;
+b) BUCKET="$OPTARG" ;;
+e) ENDPOINT_URL="$OPTARG" ;;
+r) RETAIN_OBJECT="$OPTARG" ;; # yes or no
+\?) echo "Invalid option: -$OPTARG" >&2; exit 1 ;;
+esac
  done
  
  
 # backup directory settings (Defaults_
  BASE_BACKUP_DIR=${DD_TARGET_DIRECTORY}
- ENDPOINT_URL=${ENDPOINT_URL:-"https://bucket.vpce-08d4c175d1318826b-3r1szqif.s3.us
-west-2.vpce.amazonaws.com"}
+ ENDPOINT_URL=${ENDPOINT_URL:-"https://bucket.vpce-08d4c175d1318826b-3r1szqif.s3.uswest-2.vpce.amazonaws.com"}
  RETAIN_OBJECT=${RETAIN_OBJECT:-"no"}
  OBJECT_NAME="${SQLDB}_$(date +%s).bak"
  
@@ -61,7 +65,7 @@ TASK_STATUS=$($SQLCMD ${SQLOPT} -s ',' -U "${ASSET_USERNAME}" -P "${ASSET_PASSWO
  
   echo "Progress: $PROG, Lifecycle: $LIFECYCLE"
  
-  if [[ "$LIFECYCLE" == "SUCCESS" && "$PROG" -eq 100 ]]; then
+  if [ "$LIFECYCLE" = "SUCCESS" ] && [ "$PROG" -eq 100 ]; then
     echo "RDS Backup completed successfully"
     break
   fi
@@ -78,15 +82,14 @@ EXPECTED_SIZE_GB=$(echo "($OBJECT_SIZE_BYTES + 1073741823)/1073741824" | bc)
 # Copy from S3 using expected size boostfs mountpoint
  #
  
-if aws s3 cp "s3://$BUCKET/$OBJECT_NAME"  "$BASE_BACKUP_DIR"  --endpoint
-url "$ENDPOINT_URL" --expected-size ${EXPECTED_SIZE_GB}GB  --no-progress;
+if aws s3 cp "s3://$BUCKET/$OBJECT_NAME"  "$BASE_BACKUP_DIR"  --endpoint-url "$ENDPOINT_URL" --expected-size ${EXPECTED_SIZE_GB}GB  --no-progress;
  then
  
 echo " S3 copy succeeded Proceeding to delete the object.."
  
 #Delete the object from S3 after successful copy
  
-if [[ "$RETAIN_OBJECT" != "yes" ]]; then
+if [ "$RETAIN_OBJECT" != "yes" ]; then
  echo "Deleting object from S3..."
  aws s3 rm "s3://$BUCKET/$OBJECT_NAME" --endpoint-url "$ENDPOINT_URL"
  echo "S3 object deleted successfully"

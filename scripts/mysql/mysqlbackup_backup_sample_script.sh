@@ -1,16 +1,21 @@
  #!/bin/bash
- # Configuration
- ASSET_USERNAME_USER=$ASSET_USERNAME
- ASSET_PASSWORD=$ASSET_PASSWORD
- MYSQL_HOST="localhost" # can be changed.
- BACKUP_DIR=$DD_TARGET_DIRECTORY
- DATE=$(date +%s)
- LASTBACKUPTIME=$LAST_BACKUP_TIME
- # Function to perform a full backup
- full_backup() {
+#
+# Copyright (c) 2025 Dell Inc., or its subsidiaries. All Rights Reserved.
+#
+# Licensed under the MIT License. See LICENSE file in the project root for
+# full license information.
+#
+# Configuration
+ASSET_USERNAME_USER=$ASSET_USERNAME
+ASSET_PASSWORD=$ASSET_PASSWORD
+MYSQL_HOST="localhost" # can be changed.
+BACKUP_DIR=$DD_TARGET_DIRECTORY
+DATE=$(date +%s)
+LASTBACKUPTIME=$LAST_BACKUP_TIME
+# Function to perform a full backup
+full_backup() {
     echo "Starting full backup..."
-    output=$(mysqlbackup --user=$ASSET_USERNAME --password=$ASSET_PASSWORD -
-host=$MYSQL_HOST \
+    output=$(mysqlbackup --user=$ASSET_USERNAME --password=$ASSET_PASSWORD --host=$MYSQL_HOST \
                          --backup-dir=$DD_TARGET_DIRECTORY  backup-and-apply-log 2>&1)
     if [ $? -eq 0 ]; then
         echo "Full backup completed successfully!"
@@ -25,8 +30,7 @@ host=$MYSQL_HOST \
 # Function to perform an incremental backup using LSN
  incremental_backup() {
     echo "Starting incremental backup..."
-    output=$(mysqlbackup --defaults-file=/etc/my.cnf --incremental --start
-lsn=$LAST_BACKUP_TIME \
+    output=$(mysqlbackup --defaults-file=/etc/my.cnf --incremental --startlsn=$LASTBACKUPTIME \
                          --incremental-backup-dir=$DD_TARGET_DIRECTORY \
                          --user=$ASSET_USERNAME --password=$ASSET_PASSWORD  backup 2>&1)
     if [ $? -eq 0 ]; then

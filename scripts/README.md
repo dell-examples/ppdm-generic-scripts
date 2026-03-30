@@ -1,14 +1,24 @@
-
 # PPDM Generic Application Agent Script Index
 
 This repository contains example scripts for Dell PowerProtect Data Manager (PPDM) Generic Application Agent, supporting integration and protection for PaaS and cloud-native workloads.  
 Each script entry includes a link to its documentation, the author, and the PPDM version it was tested with.
 
-|   Workload    | Agent Type | Provider | CLOUD | Script                | Documentation Link                                              | Author           | Tested PPDM Version |
-|---------------|------------|----------|-------|---------------------- |--------------------------------------------------------------- |----------------- |--------------------|
-| Azure DNS     |    PAAS    |  DNS     | Azure | [azure_dns_backup](azure_dns_backup/)       | [azure_dns_backup.md](azure_dns_backup/azure_dns_backup.md)    | karsten.bott@dell.com    | 19.20      |
-| Azure Keyvault|    PAAS    |  keyvault| Azure | [azure_keyvault_backup](azure_keyvault_backup/)| [azure_keyvault_backup.md](azure_keyvault_backup/azure_keyvault_backup.md) | karsten.bott@dell.com    | 19.20      |
-| Entra ID      |    PAAS    |  Graph   | Azure | [entraID_backup](entraId_backup/)        | [entraID_backup.md](entraId_backup/entraID_backup.md)          | karsten.bott@dell.com     | 19.20      |
-| GitHub        |    PAAS    |  git     |   --  | [git_backup_array](git_backup_array/)       | [git_backup_array.md](git_backup_array/git_backup_array.md)    | karsten.bott@dell.com     | 19.20      |
-| S3 Backup     |    PAAS    |  rclone  | any   | [s3_backup_rclone.md](s3_backup_rclone/)      | [s3_backup_rclone.md](s3_backup_rclone/s3_backup_rclone.md)   | karsten.bott@dell.com     | 19.20      |
-
+| Workload | Agent Type | Provider | CLOUD | Script | Description | Documentation Link | Author | Tested PPDM Version |
+|----------|------------|----------|-------|--------|-------------|--------------------|--------|---------------------|
+| Azure DNS | PAAS | DNS | Azure | [azure_dns_backup](azure_dns_backup/) | Backs up Azure DNS zone configuration using Azure APIs. | [azure_dns_backup.md](azure_dns_backup/azure_dns_backup.md) | karsten.bott@dell.com | 19.20 |
+| Azure Keyvault | PAAS | keyvault | Azure | [azure_keyvault_backup](azure_keyvault_backup/) | Exports Azure Key Vault objects for PPDM protection. | [azure_keyvault_backup.md](azure_keyvault_backup/azure_keyvault_backup.md) | karsten.bott@dell.com | 19.20 |
+| Entra ID | PAAS | Graph | Azure | [entraID_backup](entraId_backup/) | Collects Microsoft Entra ID application and directory data through Microsoft Graph. | [entraID_backup.md](entraId_backup/entraID_backup.md) | karsten.bott@dell.com | 19.20 |
+| GitHub | PAAS | git | -- | [git_backup_array](git_backup_array/) | Backs up Git repositories using an array-based Git workflow. | [git_backup_array.md](git_backup_array/git_backup_array.md) | karsten.bott@dell.com | 19.20 |
+| S3 Backup | PAAS | rclone | any | [s3_backup_rclone.md](s3_backup_rclone/) | Copies S3-compatible object storage data with `rclone`. | [s3_backup_rclone.md](s3_backup_rclone/s3_backup_rclone.md) | karsten.bott@dell.com | 19.20 |
+| AWS RDS SQL Server to DDVE | PAAS | SQL Server | AWS | [PaaS_RDS_AWS_S3_DDVE.sh](PaaS/PaaS_RDS_AWS_S3_DDVE.sh) | Triggers an AWS RDS SQL Server full backup to S3, copies the backup object to DD storage, and optionally deletes the S3 object. | N/A | Sharmistha.Chakraborty1@dell.com | 19.20 |
+| AWS RDS SQL Server multipart to DDVE | PAAS | SQL Server | AWS | [Pass_Backup_script.sh](PaaS/Pass_Backup_script.sh) | Triggers an AWS RDS SQL Server full backup split into multiple files, copies all parts from S3 to DDVE in parallel, and optionally removes the S3 objects. | N/A | Sharmistha.Chakraborty1@dell.com | 19.20 |
+| MariaDB physical backup | Database | MariaDB | -- | [mariabackup_backup_sample_script.sh](maria/mariabackup_backup_sample_script.sh) | Runs `mariabackup` for full or incremental MariaDB backups into the PPDM target directory. | N/A | Sharmistha.Chakraborty1@dell.com | 19.20 |
+| MariaDB logical dump | Database | MariaDB | -- | [mariadb-dump_backup_sample_script.sh](maria/mariadb-dump_backup_sample_script.sh) | Runs `mariadb-dump` to export all MariaDB databases as a logical SQL dump. | N/A | Sharmistha.Chakraborty1@dell.com | 19.20 |
+| MongoDB dump | Database | MongoDB | -- | [mongodump_backup_sample_script.sh](mongo/mongodump_backup_sample_script.sh) | Runs `mongodump` against a local MongoDB instance and writes the backup into the PPDM target directory. | N/A | Sharmistha.Chakraborty1@dell.com | 19.20 |
+| MySQL Enterprise Backup | Database | MySQL | -- | [mysqlbackup_backup_sample_script.sh](mysql/mysqlbackup_backup_sample_script.sh) | Runs `mysqlbackup` for full or incremental MySQL backups using the configured asset credentials. | N/A | Sharmistha.Chakraborty1@dell.com | 19.20 |
+| MySQL all-database dump | Database | MySQL | -- | [mysqldump_alldatabase_backup_sample_script.sh](mysql/mysqldump_alldatabase_backup_sample_script.sh) | Runs `mysqldump` for all MySQL databases and writes a timestamped SQL dump file. | N/A | Sharmistha.Chakraborty1@dell.com | 19.20 |
+| MySQL selective database dump | Database | MySQL | -- | [mysqldump_selectivedatabase_backup_sample_script.sh](mysql/mysqldump_selectivedatabase_backup_sample_script.sh) | Runs `mysqldump` for a selected MySQL database passed through script arguments. | N/A | Sharmistha.Chakraborty1@dell.com | 19.20 |
+| PostgreSQL base backup | Database | PostgreSQL | -- | [PostgreSQL pg_basebackup Linux.sh](pgsql/PostgreSQL%20pg_basebackup%20Linux.sh) | Runs `pg_basebackup` for full backups and creates WAL archive tar files for log backups. | N/A | Sharmistha.Chakraborty1@dell.com | 19.20 |
+| PostgreSQL logical dump | Database | PostgreSQL | -- | [PostgreSQL pg_dump Linux.sh](pgsql/PostgreSQL%20pg_dump%20Linux.sh) | Runs `pg_dump` to create full logical backups for one or more PostgreSQL databases. | N/A | Sharmistha.Chakraborty1@dell.com | 19.20 |
+| PostgreSQL pgBackRest backup | Database | PostgreSQL | -- | [PostgreSQL pgbackrest Linux.sh](pgsql/PostgreSQL%20pgbackrest%20Linux.sh) | Runs `pgbackrest` full or incremental backups and packages backup and archive data into the PPDM target directory. | N/A | Sharmistha.Chakraborty1@dell.com | 19.20 |
+| Sybase ASE dump backup | Database | Sybase | -- | [sybase_dump_backup_sample_script.sh](sybase/sybase_dump_backup_sample_script.sh) | Runs `dump database` (full) or `dump transaction` (log) for SAP/Sybase ASE via `isql`, writing to a BoostFS or NFS mount. | [sybase_dump_backup.md](sybase/sybase_dump_backup.md) | Sharmistha.Chakraborty1@dell.com | 19.20 |

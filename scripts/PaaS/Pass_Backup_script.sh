@@ -1,13 +1,19 @@
  #!/bin/bash
- # RDS SQL Server Backup Script with Parallel S3 Copy to DDVE and Improved Logging
- 
+#
+# Copyright (c) 2025 Dell Inc., or its subsidiaries. All Rights Reserved.
+#
+# Licensed under the MIT License. See LICENSE file in the project root for
+# full license information.
+#
+# RDS SQL Server Backup Script with Parallel S3 Copy to DDVE and Improved Logging
+
 # Tool paths
- SQL_TOOLS_PATH="/opt/mssql-tools18/bin"
- SQLCMD=$SQL_TOOLS_PATH/sqlcmd
- SQLOPT="-N o -h 1 -W -k1 -h -1 -C"
- 
+SQL_TOOLS_PATH="/opt/mssql-tools18/bin"
+SQLCMD=$SQL_TOOLS_PATH/sqlcmd
+SQLOPT="-N o -h 1 -W -k1 -h -1 -C"
+
 # Process command line options
- while getopts ":s:d:u:p:b:e:r:" opt; do
+while getopts ":s:d:u:p:b:e:r:" opt; do
   case $opt in
     s) SQLSRV="$OPTARG" ;;
     d) SQLDB="$OPTARG" ;;
@@ -22,15 +28,13 @@
  
 # Backup directory settings
  BASE_BACKUP_DIR=${DD_TARGET_DIRECTORY}
- ENDPOINT_URL=${ENDPOINT_URL:-"https://bucket.vpce-08d4c175d1318826b-3r1szqif.s3.us
-west-2.vpce.amazonaws.com"}
+ ENDPOINT_URL=${ENDPOINT_URL:-"https://bucket.vpce-08d4c175d1318826b-3r1szqif.s3.uswest-2.vpce.amazonaws.com"}
  RETAIN_OBJECT=${RETAIN_OBJECT:-"no"}
+ REGION=${REGION:-"us-west-2"}
  OBJECT_NAME="${SQLDB}_$(date +%s)_*.bak"
  
 # Contact the database and execute the stored procedure
- BACKUP_OUTPUT=$($SQLCMD ${SQLOPT} -s ',' -U "${ASSET_USERNAME}" -P "$
- {ASSET_PASSWORD}" -S "$SQLSRV" -Q "
- exec msdb.dbo.rds_backup_database
+ BACKUP_OUTPUT=$($SQLCMD ${SQLOPT} -s ',' -U "${ASSET_USERNAME}" -P "${ASSET_PASSWORD}" -S "$SQLSRV" -Q "exec msdb.dbo.rds_backup_database
     @source_db_name='${SQLDB}',
     @s3_arn_to_backup_to='arn:aws:s3:::${BUCKET}/${OBJECT_NAME}',
     @overwrite_s3_backup_file=1,
@@ -48,9 +52,7 @@ TASKID=$(echo "$BACKUP_OUTPUT" | head -1 | cut -d ',' -f 1)
  # Poll for completion
  sleep 30
  while true; do
-  TASK_STATUS=$($SQLCMD ${SQLOPT} -s ',' -U "${ASSET_USERNAME}" -P 
-"${ASSET_PASSWORD}" -S "$SQLSRV" -Q "
-    exec msdb.dbo.rds_task_status
+  TASK_STATUS=$($SQLCMD ${SQLOPT} -s ',' -U "${ASSET_USERNAME}" -P "${ASSET_PASSWORD}" -S "$SQLSRV" -Q "exec msdb.dbo.rds_task_status
     @db_name='${SQLDB}',
     @task_id=${TASKID};" | head -1)
  
@@ -70,8 +72,7 @@ TASKID=$(echo "$BACKUP_OUTPUT" | head -1 | cut -d ',' -f 1)
 # Retry logic to detect all backup parts
  RETRIES=5
  for i in $(seq 1 $RETRIES); do
-  OBJECT_NAMES=$(aws s3 ls "s3://$BUCKET/" --endpoint-url "$ENDPOINT_URL" 
-| grep "${SQLDB}_" | awk '{print $4}')
+  OBJECT_NAMES=$(aws s3 ls "s3://$BUCKET/" --endpoint-url "$ENDPOINT_URL" | grep "${SQLDB}_" | awk '{print $4}')
   if [ -n "$OBJECT_NAMES" ]; then
     break
   fi
@@ -88,8 +89,7 @@ echo "$(date '+%Y-%m-%d %H:%M:%S') - Backup parts detected:"
  echo "$OBJECT_NAMES"
  
 # Start parallel copy for all parts
- echo "$(date '+%Y-%m-%d %H:%M:%S') - Starting parallel copy of 
-all backup parts from S3 to DDVE..."
+ echo "$(date '+%Y-%m-%d %H:%M:%S') - Starting parallel copy of all backup parts from S3 to DDVE..."
  
 echo "$OBJECT_NAMES" | xargs -I {} -P 10 sh -c 'echo "$(date) - Copying {}"; aws s3 cp "s3://'"$BUCKET"'/{}" "'"$BASE_BACKUP_DIR"'/" --endpoint-url "'"$ENDPOINT_URL"'"  --no-progress || echo "Failed to copy {}"'
  
@@ -103,8 +103,7 @@ echo "$OBJECT_NAMES" | xargs -I {} -P 10 sh -c 'echo "$(date) - Copying {}"; aws
  
   if [ "$RETAIN_OBJECT" != "yes" ]; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - Deleting backup files from S3..."
-    echo "$OBJECT_NAMES" | xargs -I {} -P 10 sh -c 'echo "$(date) - Deleting {}"; aws 
-s3 rm "s3://'"$BUCKET"'/{}" --endpoint-url "'"$ENDPOINT_URL"'" --region "'"$REGION"'"'
+    echo "$OBJECT_NAMES" | xargs -I {} -P 10 sh -c 'echo "$(date) - Deleting {}"; aws s3 rm "s3://'"$BUCKET"'/{}" --endpoint-url "'"$ENDPOINT_URL"'" --region "'"$REGION"'"'
     echo "$(date '+%Y-%m-%d %H:%M:%S') - S3 objects deleted successfully."
   else
     echo "$(date '+%Y-%m-%d %H:%M:%S') - Retaining objects on S3 as per user request."
